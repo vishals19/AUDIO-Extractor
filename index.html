@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,434 +6,807 @@
     <title>Video Audio Extractor | Extract MP3 from Videos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ===== RESET & BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
+        :root {
+            --primary: #8e2de2;
+            --primary-dark: #4a00e0;
+            --secondary: #00b09b;
+            --secondary-light: #96c93d;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --light: #f8f9fa;
+            --dark: #333;
+            --gray: #666;
+            --light-gray: #e0e0e0;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --radius: 15px;
+            --transition: all 0.3s ease;
+        }
+
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
+            color: var(--dark);
             padding: 20px;
+            line-height: 1.6;
         }
-        
+
+        /* ===== CONTAINER & LAYOUT ===== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
-        
-        header {
-            background: linear-gradient(to right, #4a00e0, #8e2de2);
-            color: white;
-            padding: 30px;
-            text-align: center;
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
         }
-        
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
+
         .logo {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #fff;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--white);
+            position: relative;
+            display: inline-block;
+            animation: bounce 2s infinite;
         }
-        
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .file-info-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ===== MAIN CONTENT ===== */
         main {
             display: flex;
             flex-wrap: wrap;
             padding: 30px;
+            gap: 30px;
         }
-        
+
         .upload-section {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
         }
-        
+
         .info-section {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 25px;
         }
-        
+
+        /* ===== UPLOAD AREA ===== */
         .upload-area {
-            border: 3px dashed #8e2de2;
-            border-radius: 15px;
-            padding: 40px 20px;
+            border: 3px dashed var(--primary);
+            border-radius: var(--radius);
+            padding: 50px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            background: #f9f6ff;
-            margin-bottom: 20px;
+            transition: var(--transition);
+            background: linear-gradient(145deg, #f9f6ff, #f0ebff);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
         }
-        
+
         .upload-area:hover {
-            background: #f0ebff;
-            border-color: #4a00e0;
+            background: linear-gradient(145deg, #f0ebff, #e6deff);
+            border-color: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(142, 45, 226, 0.2);
         }
-        
+
         .upload-area i {
-            font-size: 4rem;
-            color: #8e2de2;
-            margin-bottom: 15px;
-        }
-        
-        .upload-area h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #4a00e0;
-        }
-        
-        .upload-area p {
-            color: #666;
+            font-size: 4.5rem;
+            color: var(--primary);
             margin-bottom: 20px;
+            transition: var(--transition);
         }
-        
+
+        .upload-area:hover i {
+            transform: scale(1.1);
+        }
+
+        .upload-area h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        .upload-area p {
+            color: var(--gray);
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
         .browse-btn {
-            background: linear-gradient(to right, #4a00e0, #8e2de2);
-            color: white;
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            color: var(--white);
             border: none;
-            padding: 12px 30px;
+            padding: 15px 35px;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
         }
-        
+
         .browse-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(142, 45, 226, 0.3);
+            box-shadow: 0 10px 25px rgba(142, 45, 226, 0.5);
         }
-        
-        #fileInput {
-            display: none;
-        }
-        
+
+        /* ===== SELECTED FILE DISPLAY ===== */
         .selected-file {
-            background: #e8f4ff;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
+            background: linear-gradient(145deg, #e8f4ff, #d9ebff);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-top: 20px;
             display: none;
             align-items: center;
             justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+            border-left: 5px solid var(--primary);
         }
-        
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         .selected-file i {
-            color: #4a00e0;
-            font-size: 1.5rem;
-            margin-right: 15px;
+            color: var(--primary);
+            font-size: 2rem;
+            margin-right: 20px;
         }
-        
+
         .file-info {
             flex: 1;
         }
-        
+
         .file-name {
-            font-weight: 600;
-            color: #333;
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            word-break: break-all;
         }
-        
+
         .file-size {
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 0.95rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        
+
+        .file-size i {
+            font-size: 0.9rem;
+            margin-right: 0;
+        }
+
         .remove-file {
-            background: #ff4757;
-            color: white;
+            background: var(--danger);
+            color: var(--white);
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
         }
-        
+
+        .remove-file:hover {
+            transform: rotate(90deg);
+            background: #ff2e43;
+        }
+
+        /* ===== OPTIONS PANEL ===== */
         .options {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-top: 20px;
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-top: 25px;
+            border: 1px solid var(--light-gray);
         }
-        
+
         .options h3 {
-            color: #4a00e0;
-            margin-bottom: 15px;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
+            font-size: 1.5rem;
         }
-        
+
         .options h3 i {
-            margin-right: 10px;
+            margin-right: 12px;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
-        
+
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #555;
+            color: var(--dark);
+            font-size: 1.05rem;
         }
-        
+
         select, input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
+            padding: 14px 18px;
+            border: 2px solid var(--light-gray);
             border-radius: 10px;
             font-size: 1rem;
-            transition: border 0.3s;
+            transition: var(--transition);
+            background: var(--light);
         }
-        
+
         select:focus, input:focus {
-            border-color: #8e2de2;
+            border-color: var(--primary);
             outline: none;
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.1);
         }
-        
+
         .time-inputs {
             display: flex;
-            gap: 15px;
+            gap: 20px;
         }
-        
+
         .time-inputs .form-group {
             flex: 1;
         }
-        
+
         .time-format {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 5px;
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 8px;
+            font-style: italic;
         }
-        
+
+        /* ===== BUTTONS ===== */
         .process-btn {
-            background: linear-gradient(to right, #00b09b, #96c93d);
-            color: white;
+            background: linear-gradient(to right, var(--secondary), var(--secondary-light));
+            color: var(--white);
             border: none;
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
+            transition: var(--transition);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 5px 20px rgba(0, 176, 155, 0.3);
         }
-        
-        .process-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 176, 155, 0.3);
+
+        .process-btn:hover:not(:disabled) {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 176, 155, 0.4);
         }
-        
+
         .process-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            opacity: 0.6;
         }
-        
-        .info-section h2 {
-            color: #4a00e0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        
-        .features {
-            list-style: none;
-        }
-        
-        .features li {
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .features i {
-            color: #8e2de2;
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .feature-text h4 {
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .feature-text p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .supported-formats {
-            margin-top: 30px;
-        }
-        
-        .formats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .format-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .format-card i {
-            font-size: 1.8rem;
-            color: #8e2de2;
-            margin-bottom: 10px;
-        }
-        
-        .format-extension {
-            font-weight: 700;
-            color: #333;
-        }
-        
-        .format-name {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .result-section {
-            display: none;
-            background: #e8f7f3;
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        
-        .result-section h3 {
-            color: #00b09b;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-        
-        .result-section i {
-            font-size: 4rem;
-            color: #00b09b;
-            margin-bottom: 20px;
-        }
-        
-        .download-btn {
-            background: linear-gradient(to right, #00b09b, #96c93d);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 176, 155, 0.3);
-        }
-        
-        .another-btn {
-            background: #8e2de2;
-            margin-left: 15px;
-        }
-        
+
+        /* ===== LOADING INDICATOR ===== */
         .loading {
             display: none;
             text-align: center;
-            padding: 30px;
+            padding: 40px;
+            background: var(--white);
+            border-radius: var(--radius);
+            margin-top: 25px;
+            box-shadow: var(--shadow);
         }
-        
+
         .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #8e2de2;
+            border: 5px solid var(--light);
+            border-top: 5px solid var(--primary);
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .error {
-            background: #ffeaea;
-            color: #ff4757;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
+
+        .loading p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-top: 10px;
         }
-        
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* ===== RESULT SECTION ===== */
+        .result-section {
+            display: none;
+            background: linear-gradient(145deg, #e8f7f3, #d4f0e8);
+            padding: 40px;
+            border-radius: var(--radius);
+            margin-top: 30px;
+            text-align: center;
+            animation: slideInUp 0.6s ease-out;
+            border: 2px dashed var(--secondary);
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-section i {
+            font-size: 5rem;
+            color: var(--secondary);
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .result-section h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .result-section p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(to right, var(--secondary), var(--secondary-light));
+            color: var(--white);
+            border: none;
+            padding: 16px 35px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(0, 176, 155, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 176, 155, 0.4);
+        }
+
+        .another-btn {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        }
+
+        .another-btn:hover {
+            box-shadow: 0 10px 25px rgba(142, 45, 226, 0.4);
+        }
+
+        /* ===== ERROR SECTION ===== */
+        .error {
+            background: linear-gradient(145deg, #ffeaea, #ffd6d6);
+            color: var(--danger);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-top: 25px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            border-left: 5px solid var(--danger);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .error i {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .error span {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        /* ===== INFO SECTION ===== */
+        .info-section h2 {
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+            font-size: 1.8rem;
+        }
+
+        .features {
+            list-style: none;
+        }
+
+        .features li {
+            padding: 20px;
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .features li:hover {
+            transform: translateX(10px);
+            border-left-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .features i {
+            color: var(--primary);
+            margin-right: 18px;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(142, 45, 226, 0.1);
+            border-radius: 50%;
+        }
+
+        .feature-text h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .feature-text p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .supported-formats {
+            margin-top: 35px;
+        }
+
+        .supported-formats h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .formats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .format-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .format-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .format-card i {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .format-extension {
+            font-weight: 800;
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .format-name {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .how-it-works {
+            margin-top: 35px;
+            padding: 25px;
+            background: linear-gradient(145deg, #f0ebff, #e6deff);
+            border-radius: var(--radius);
+            border: 1px solid rgba(142, 45, 226, 0.2);
+        }
+
+        .how-it-works h3 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            padding: 15px 15px 15px 50px;
+            margin-bottom: 15px;
+            background: var(--white);
+            border-radius: 10px;
+            position: relative;
+            font-weight: 500;
+            color: var(--dark);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .steps li::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* ===== FOOTER ===== */
         footer {
             text-align: center;
-            padding: 20px;
-            color: white;
-            margin-top: 30px;
+            padding: 30px 20px;
+            color: var(--white);
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius);
+            backdrop-filter: blur(10px);
         }
-        
+
+        footer p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
         footer a {
-            color: white;
+            color: var(--white);
             text-decoration: none;
             font-weight: 600;
+            transition: var(--transition);
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: inline-block;
         }
-        
+
+        footer a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             main {
                 flex-direction: column;
-                padding: 15px;
+                padding: 20px;
+                gap: 20px;
             }
             
             .upload-section, .info-section {
-                padding: 10px;
+                min-width: 100%;
+            }
+            
+            header {
+                padding: 30px 20px;
             }
             
             header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            .logo {
+                font-size: 3.5rem;
             }
             
             .time-inputs {
                 flex-direction: column;
+                gap: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .download-btn, .another-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .formats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .upload-area {
+                padding: 30px 15px;
+            }
+            
+            .upload-area h3 {
+                font-size: 1.5rem;
+            }
+            
+            .formats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
                 gap: 10px;
+                align-items: center;
             }
         }
     </style>
@@ -447,35 +819,45 @@
             </div>
             <h1>Video Audio Extractor</h1>
             <p>Extract high-quality audio from your videos in MP3, WAV, and other formats. Completely free and works on all devices.</p>
+            <div class="file-info-badge">
+                <i class="fas fa-info-circle"></i> Supports files up to 500MB • No registration required
+            </div>
         </header>
         
         <main>
             <div class="upload-section">
+                <!-- Upload Area -->
                 <div class="upload-area" id="uploadArea">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <h3>Select a Video File</h3>
                     <p>Drag & drop your video here or click to browse</p>
-                    <p class="time-format">Supports MP4, AVI, MOV, MKV, FLV, WMV, WebM, MPEG, and M4V</p>
-                    <button class="browse-btn">Browse Files</button>
+                    <p>Supports MP4, AVI, MOV, MKV, FLV, WMV, WebM, MPEG, and M4V</p>
+                    <button class="browse-btn">
+                        <i class="fas fa-folder-open"></i> Browse Files
+                    </button>
                     <input type="file" id="fileInput" accept=".mp4,.avi,.mov,.mkv,.flv,.wmv,.webm,.mpeg,.mpg,.m4v">
                 </div>
                 
+                <!-- Selected File Display -->
                 <div class="selected-file" id="selectedFile">
                     <i class="fas fa-file-video"></i>
                     <div class="file-info">
-                        <div class="file-name" id="fileName">video.mp4</div>
-                        <div class="file-size" id="fileSize">0 MB</div>
+                        <div class="file-name" id="fileName">No file selected</div>
+                        <div class="file-size" id="fileSize">
+                            <i class="fas fa-hdd"></i> <span>0 MB</span>
+                        </div>
                     </div>
-                    <button class="remove-file" id="removeFile">
+                    <button class="remove-file" id="removeFile" title="Remove file">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 
+                <!-- Options Panel -->
                 <div class="options">
                     <h3><i class="fas fa-cog"></i> Extraction Options</h3>
                     
                     <div class="form-group">
-                        <label for="format">Output Format</label>
+                        <label for="format"><i class="fas fa-music"></i> Output Format</label>
                         <select id="format">
                             <option value="mp3">MP3 (Standard audio format)</option>
                             <option value="wav">WAV (High quality, uncompressed)</option>
@@ -486,15 +868,15 @@
                     
                     <div class="time-inputs">
                         <div class="form-group">
-                            <label for="startTime">Start Time (optional)</label>
+                            <label for="startTime"><i class="fas fa-play-circle"></i> Start Time (optional)</label>
                             <input type="text" id="startTime" placeholder="00:00 or seconds">
-                            <div class="time-format">Format: MM:SS or seconds</div>
+                            <div class="time-format">Format: MM:SS or seconds (e.g., 01:30 or 90)</div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="endTime">End Time (optional)</label>
+                            <label for="endTime"><i class="fas fa-stop-circle"></i> End Time (optional)</label>
                             <input type="text" id="endTime" placeholder="00:30 or seconds">
-                            <div class="time-format">Format: MM:SS or seconds</div>
+                            <div class="time-format">Format: MM:SS or seconds (e.g., 03:45 or 225)</div>
                         </div>
                     </div>
                     
@@ -503,30 +885,40 @@
                     </button>
                 </div>
                 
+                <!-- Loading Indicator -->
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
                     <h3>Extracting Audio...</h3>
                     <p>This may take a moment depending on the video size</p>
+                    <div class="progress-bar">
+                        <div class="progress" id="progressBar"></div>
+                    </div>
+                    <p id="progressText">Processing your video...</p>
                 </div>
                 
+                <!-- Result Section -->
                 <div class="result-section" id="resultSection">
                     <i class="fas fa-check-circle"></i>
                     <h3>Audio Successfully Extracted!</h3>
                     <p>Your audio file is ready to download</p>
-                    <a href="#" class="download-btn" id="downloadLink">
-                        <i class="fas fa-download"></i> Download Audio
-                    </a>
-                    <button class="download-btn another-btn" id="anotherBtn">
-                        <i class="fas fa-redo"></i> Extract Another
-                    </button>
+                    <div class="button-group">
+                        <a href="#" class="download-btn" id="downloadLink">
+                            <i class="fas fa-download"></i> Download Audio
+                        </a>
+                        <button class="download-btn another-btn" id="anotherBtn">
+                            <i class="fas fa-redo"></i> Extract Another
+                        </button>
+                    </div>
                 </div>
                 
+                <!-- Error Section -->
                 <div class="error" id="errorSection">
                     <i class="fas fa-exclamation-circle"></i>
                     <span id="errorText">An error occurred during extraction</span>
                 </div>
             </div>
             
+            <!-- Information Section -->
             <div class="info-section">
                 <h2>Why Use Our Audio Extractor?</h2>
                 
@@ -535,14 +927,14 @@
                         <i class="fas fa-shield-alt"></i>
                         <div class="feature-text">
                             <h4>Secure & Private</h4>
-                            <p>Your files are processed locally on our server and automatically deleted after 24 hours. We never store your personal data.</p>
+                            <p>Your files are processed locally and automatically deleted after processing. We never store or share your personal data.</p>
                         </div>
                     </li>
                     <li>
                         <i class="fas fa-bolt"></i>
                         <div class="feature-text">
                             <h4>Fast Processing</h4>
-                            <p>Extract audio from videos quickly with our optimized processing engine. Even large files are handled efficiently.</p>
+                            <p>Extract audio from videos quickly with our optimized processing. Even large files are handled efficiently.</p>
                         </div>
                     </li>
                     <li>
@@ -561,65 +953,68 @@
                     </li>
                 </ul>
                 
+                <!-- Supported Video Formats -->
                 <div class="supported-formats">
-                    <h3>Supported Formats</h3>
+                    <h3><i class="fas fa-film"></i> Supported Video Formats</h3>
                     <div class="formats-grid">
                         <div class="format-card">
-                            <i class="fas fa-film"></i>
+                            <i class="fas fa-file-video"></i>
                             <div class="format-extension">MP4</div>
                             <div class="format-name">Most Common</div>
                         </div>
                         <div class="format-card">
-                            <i class="fas fa-film"></i>
+                            <i class="fas fa-file-video"></i>
                             <div class="format-extension">AVI</div>
                             <div class="format-name">Audio Video</div>
                         </div>
                         <div class="format-card">
-                            <i class="fas fa-film"></i>
+                            <i class="fas fa-file-video"></i>
                             <div class="format-extension">MOV</div>
                             <div class="format-name">Apple QuickTime</div>
                         </div>
                         <div class="format-card">
-                            <i class="fas fa-film"></i>
+                            <i class="fas fa-file-video"></i>
                             <div class="format-extension">MKV</div>
                             <div class="format-name">Matroska Video</div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Output Audio Formats -->
                 <div class="supported-formats">
-                    <h3>Output Audio Formats</h3>
+                    <h3><i class="fas fa-headphones"></i> Output Audio Formats</h3>
                     <div class="formats-grid">
                         <div class="format-card">
-                            <i class="fas fa-music"></i>
+                            <i class="fas fa-file-audio"></i>
                             <div class="format-extension">MP3</div>
                             <div class="format-name">Standard</div>
                         </div>
                         <div class="format-card">
-                            <i class="fas fa-music"></i>
+                            <i class="fas fa-file-audio"></i>
                             <div class="format-extension">WAV</div>
                             <div class="format-name">High Quality</div>
                         </div>
                         <div class="format-card">
-                            <i class="fas fa-music"></i>
+                            <i class="fas fa-file-audio"></i>
                             <div class="format-extension">OGG</div>
                             <div class="format-name">Open Source</div>
                         </div>
                         <div class="format-card">
-                            <i class="fas fa-music"></i>
+                            <i class="fas fa-file-audio"></i>
                             <div class="format-extension">M4A</div>
                             <div class="format-name">Apple Audio</div>
                         </div>
                     </div>
                 </div>
                 
-                <div style="margin-top: 30px; padding: 20px; background: #f0ebff; border-radius: 10px;">
-                    <h3 style="color: #4a00e0; margin-bottom: 10px;"><i class="fas fa-lightbulb"></i> How It Works</h3>
-                    <ol style="padding-left: 20px; color: #555;">
-                        <li style="margin-bottom: 8px;">Select a video file from your device</li>
-                        <li style="margin-bottom: 8px;">Choose your preferred audio format</li>
-                        <li style="margin-bottom: 8px;">Set start/end time if you want to trim</li>
-                        <li style="margin-bottom: 8px;">Click "Extract Audio" to process</li>
+                <!-- How It Works -->
+                <div class="how-it-works">
+                    <h3><i class="fas fa-lightbulb"></i> How It Works</h3>
+                    <ol class="steps">
+                        <li>Select a video file from your device</li>
+                        <li>Choose your preferred audio format</li>
+                        <li>Set start/end time if you want to trim</li>
+                        <li>Click "Extract Audio" to process</li>
                         <li>Download your audio file</li>
                     </ol>
                 </div>
@@ -627,11 +1022,20 @@
         </main>
     </div>
     
+    <!-- Footer -->
     <footer>
         <p>Video Audio Extractor © 2023 | Made with <i class="fas fa-heart" style="color:#ff4757;"></i> for content creators</p>
-        <p><a href="#"><i class="fas fa-code"></i> View Source Code</a> | <a href="#"><i class="fas fa-question-circle"></i> Help & FAQ</a></p>
+        <div class="footer-links">
+            <a href="#" id="viewSource"><i class="fas fa-code"></i> View Source Code</a>
+            <a href="#" id="helpLink"><i class="fas fa-question-circle"></i> Help & FAQ</a>
+            <a href="#" id="contactLink"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">
+            <i class="fas fa-exclamation-triangle"></i> This is a frontend demo. For full functionality, you need a backend server.
+        </p>
     </footer>
 
+    <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
@@ -648,28 +1052,40 @@
             const errorText = document.getElementById('errorText');
             const downloadLink = document.getElementById('downloadLink');
             const anotherBtn = document.getElementById('anotherBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
             
             // Variables
             let currentFile = null;
+            let isProcessing = false;
             
             // Event Listeners
-            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('click', () => {
+                if (!isProcessing) fileInput.click();
+            });
             
+            // Drag and drop functionality
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                uploadArea.style.borderColor = '#4a00e0';
-                uploadArea.style.background = '#f0ebff';
+                if (!isProcessing) {
+                    uploadArea.style.borderColor = 'var(--primary-dark)';
+                    uploadArea.style.background = 'linear-gradient(145deg, #f0ebff, #e6deff)';
+                }
             });
             
             uploadArea.addEventListener('dragleave', () => {
-                uploadArea.style.borderColor = '#8e2de2';
-                uploadArea.style.background = '#f9f6ff';
+                if (!isProcessing) {
+                    uploadArea.style.borderColor = 'var(--primary)';
+                    uploadArea.style.background = 'linear-gradient(145deg, #f9f6ff, #f0ebff)';
+                }
             });
             
             uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                uploadArea.style.borderColor = '#8e2de2';
-                uploadArea.style.background = '#f9f6ff';
+                if (isProcessing) return;
+                
+                uploadArea.style.borderColor = 'var(--primary)';
+                uploadArea.style.background = 'linear-gradient(145deg, #f9f6ff, #f0ebff)';
                 
                 if (e.dataTransfer.files.length) {
                     handleFileSelect(e.dataTransfer.files[0]);
@@ -677,7 +1093,7 @@
             });
             
             fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length) {
+                if (e.target.files.length && !isProcessing) {
                     handleFileSelect(e.target.files[0]);
                 }
             });
@@ -687,6 +1103,22 @@
             processBtn.addEventListener('click', processFile);
             
             anotherBtn.addEventListener('click', resetAll);
+            
+            // Demo buttons
+            document.getElementById('viewSource').addEventListener('click', (e) => {
+                e.preventDefault();
+                showError('Source code will be available on GitHub soon!');
+            });
+            
+            document.getElementById('helpLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                showError('Help section is under development.');
+            });
+            
+            document.getElementById('contactLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                showError('Contact form coming soon!');
+            });
             
             // Functions
             function handleFileSelect(file) {
@@ -709,7 +1141,7 @@
                 
                 // Update UI
                 fileName.textContent = file.name;
-                fileSize.textContent = formatFileSize(file.size);
+                fileSize.innerHTML = `<i class="fas fa-hdd"></i> <span>${formatFileSize(file.size)}</span>`;
                 selectedFile.style.display = 'flex';
                 processBtn.disabled = false;
                 
@@ -719,19 +1151,28 @@
             }
             
             function resetFileSelection() {
+                if (isProcessing) return;
+                
                 currentFile = null;
                 fileInput.value = '';
                 selectedFile.style.display = 'none';
                 processBtn.disabled = true;
+                hideError();
             }
             
             function resetAll() {
+                if (isProcessing) return;
+                
                 resetFileSelection();
                 document.getElementById('startTime').value = '';
                 document.getElementById('endTime').value = '';
                 document.getElementById('format').value = 'mp3';
                 resultSection.style.display = 'none';
-                errorSection.style.display = 'none';
+                hideError();
+                
+                // Reset upload area style
+                uploadArea.style.borderColor = 'var(--primary)';
+                uploadArea.style.background = 'linear-gradient(145deg, #f9f6ff, #f0ebff)';
             }
             
             function formatFileSize(bytes) {
@@ -744,8 +1185,10 @@
             
             function showError(message) {
                 errorText.textContent = message;
-                errorSection.style.display = 'block';
+                errorSection.style.display = 'flex';
                 loading.style.display = 'none';
+                resultSection.style.display = 'none';
+                isProcessing = false;
             }
             
             function hideError() {
@@ -753,7 +1196,7 @@
             }
             
             async function processFile() {
-                if (!currentFile) return;
+                if (!currentFile || isProcessing) return;
                 
                 // Validate time inputs
                 const startTime = document.getElementById('startTime').value.trim();
@@ -774,43 +1217,95 @@
                 loading.style.display = 'block';
                 errorSection.style.display = 'none';
                 resultSection.style.display = 'none';
+                processBtn.disabled = true;
+                isProcessing = true;
                 
-                // Prepare form data
-                const formData = new FormData();
-                formData.append('video', currentFile);
-                formData.append('format', format);
-                if (startTime) formData.append('start_time', startTime);
-                if (endTime) formData.append('end_time', endTime);
+                // Simulate processing with progress bar
+                simulateProgress();
+                
+                // In a real implementation, you would send the file to a backend server
+                // For this demo, we'll simulate the processing
                 
                 try {
-                    // Send request to server
-                    const response = await fetch('/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
+                    // Simulate network delay
+                    await delay(2000 + Math.random() * 2000);
                     
-                    const data = await response.json();
+                    // Simulate extraction process
+                    const success = Math.random() > 0.1; // 90% success rate for demo
                     
-                    // Hide loading
-                    loading.style.display = 'none';
-                    
-                    if (data.success) {
-                        // Show success and set download link
-                        downloadLink.href = data.download_url;
+                    if (success) {
+                        // Show success
+                        loading.style.display = 'none';
                         resultSection.style.display = 'block';
+                        isProcessing = false;
                         
-                        // Auto-download after 2 seconds
-                        setTimeout(() => {
-                            downloadLink.click();
-                        }, 2000);
+                        // Create a fake download link for demo
+                        const fakeAudioBlob = new Blob(['Fake audio content for demo'], { type: 'audio/mpeg' });
+                        const fakeUrl = URL.createObjectURL(fakeAudioBlob);
+                        const outputFormat = document.getElementById('format').value;
+                        downloadLink.href = fakeUrl;
+                        downloadLink.download = `extracted_audio.${outputFormat}`;
+                        
+                        // Show success message with format
+                        const formatName = document.getElementById('format').options[document.getElementById('format').selectedIndex].text;
+                        document.querySelector('#resultSection h3').textContent = 'Audio Successfully Extracted!';
+                        document.querySelector('#resultSection p').textContent = `Your ${formatName.split(' ')[0]} file is ready to download`;
+                        
+                        // Clean up after download
+                        downloadLink.addEventListener('click', () => {
+                            setTimeout(() => {
+                                URL.revokeObjectURL(fakeUrl);
+                            }, 100);
+                        });
                     } else {
-                        showError(data.error || 'An error occurred during extraction');
+                        // Simulate random errors
+                        const errors = [
+                            'Failed to process video file. Please try again.',
+                            'Unsupported video format. Please convert your video to MP4 and try again.',
+                            'Audio extraction failed. The video might be corrupted.',
+                            'Processing timeout. Please try with a smaller video file.'
+                        ];
+                        throw new Error(errors[Math.floor(Math.random() * errors.length)]);
                     }
                 } catch (error) {
                     loading.style.display = 'none';
-                    showError('Network error. Please check your connection and try again.');
-                    console.error('Error:', error);
+                    showError(error.message);
+                    processBtn.disabled = false;
+                    isProcessing = false;
                 }
+            }
+            
+            function simulateProgress() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    if (!isProcessing) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    
+                    progress += Math.random() * 15;
+                    if (progress > 100) progress = 100;
+                    
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress < 30) {
+                        progressText.textContent = 'Analyzing video file...';
+                    } else if (progress < 60) {
+                        progressText.textContent = 'Extracting audio stream...';
+                    } else if (progress < 90) {
+                        progressText.textContent = 'Encoding audio file...';
+                    } else {
+                        progressText.textContent = 'Finalizing...';
+                    }
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                    }
+                }, 300);
+            }
+            
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
             }
             
             function isValidTime(timeStr) {
@@ -825,6 +1320,11 @@
             
             // Initialize
             resetAll();
+            
+            // Add some demo functionality for mobile
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                document.querySelector('.upload-area p').innerHTML += '<br><small><i class="fas fa-mobile-alt"></i> Tap to select a video</small>';
+            }
         });
     </script>
 </body>
