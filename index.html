@@ -1,0 +1,831 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Audio Extractor | Extract MP3 from Videos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .upload-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #8e2de2;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f6ff;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            background: #f0ebff;
+            border-color: #4a00e0;
+        }
+        
+        .upload-area i {
+            font-size: 4rem;
+            color: #8e2de2;
+            margin-bottom: 15px;
+        }
+        
+        .upload-area h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #4a00e0;
+        }
+        
+        .upload-area p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .browse-btn {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .browse-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(142, 45, 226, 0.3);
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .selected-file {
+            background: #e8f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .selected-file i {
+            color: #4a00e0;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .file-size {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .remove-file {
+            background: #ff4757;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .options {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .options h3 {
+            color: #4a00e0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .options h3 i {
+            margin-right: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        select:focus, input:focus {
+            border-color: #8e2de2;
+            outline: none;
+        }
+        
+        .time-inputs {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .time-inputs .form-group {
+            flex: 1;
+        }
+        
+        .time-format {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .process-btn {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .process-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 176, 155, 0.3);
+        }
+        
+        .process-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .info-section h2 {
+            color: #4a00e0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .features {
+            list-style: none;
+        }
+        
+        .features li {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .features i {
+            color: #8e2de2;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .feature-text h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .feature-text p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .supported-formats {
+            margin-top: 30px;
+        }
+        
+        .formats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .format-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .format-card i {
+            font-size: 1.8rem;
+            color: #8e2de2;
+            margin-bottom: 10px;
+        }
+        
+        .format-extension {
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .format-name {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .result-section {
+            display: none;
+            background: #e8f7f3;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .result-section h3 {
+            color: #00b09b;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .result-section i {
+            font-size: 4rem;
+            color: #00b09b;
+            margin-bottom: 20px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 176, 155, 0.3);
+        }
+        
+        .another-btn {
+            background: #8e2de2;
+            margin-left: 15px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #8e2de2;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #ffeaea;
+            color: #ff4757;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .upload-section, .info-section {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .time-inputs {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-file-audio"></i>
+            </div>
+            <h1>Video Audio Extractor</h1>
+            <p>Extract high-quality audio from your videos in MP3, WAV, and other formats. Completely free and works on all devices.</p>
+        </header>
+        
+        <main>
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Select a Video File</h3>
+                    <p>Drag & drop your video here or click to browse</p>
+                    <p class="time-format">Supports MP4, AVI, MOV, MKV, FLV, WMV, WebM, MPEG, and M4V</p>
+                    <button class="browse-btn">Browse Files</button>
+                    <input type="file" id="fileInput" accept=".mp4,.avi,.mov,.mkv,.flv,.wmv,.webm,.mpeg,.mpg,.m4v">
+                </div>
+                
+                <div class="selected-file" id="selectedFile">
+                    <i class="fas fa-file-video"></i>
+                    <div class="file-info">
+                        <div class="file-name" id="fileName">video.mp4</div>
+                        <div class="file-size" id="fileSize">0 MB</div>
+                    </div>
+                    <button class="remove-file" id="removeFile">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="options">
+                    <h3><i class="fas fa-cog"></i> Extraction Options</h3>
+                    
+                    <div class="form-group">
+                        <label for="format">Output Format</label>
+                        <select id="format">
+                            <option value="mp3">MP3 (Standard audio format)</option>
+                            <option value="wav">WAV (High quality, uncompressed)</option>
+                            <option value="ogg">OGG (Open source format)</option>
+                            <option value="m4a">M4A (Apple audio format)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-inputs">
+                        <div class="form-group">
+                            <label for="startTime">Start Time (optional)</label>
+                            <input type="text" id="startTime" placeholder="00:00 or seconds">
+                            <div class="time-format">Format: MM:SS or seconds</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="endTime">End Time (optional)</label>
+                            <input type="text" id="endTime" placeholder="00:30 or seconds">
+                            <div class="time-format">Format: MM:SS or seconds</div>
+                        </div>
+                    </div>
+                    
+                    <button class="process-btn" id="processBtn" disabled>
+                        <i class="fas fa-magic"></i> Extract Audio
+                    </button>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <h3>Extracting Audio...</h3>
+                    <p>This may take a moment depending on the video size</p>
+                </div>
+                
+                <div class="result-section" id="resultSection">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Audio Successfully Extracted!</h3>
+                    <p>Your audio file is ready to download</p>
+                    <a href="#" class="download-btn" id="downloadLink">
+                        <i class="fas fa-download"></i> Download Audio
+                    </a>
+                    <button class="download-btn another-btn" id="anotherBtn">
+                        <i class="fas fa-redo"></i> Extract Another
+                    </button>
+                </div>
+                
+                <div class="error" id="errorSection">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText">An error occurred during extraction</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2>Why Use Our Audio Extractor?</h2>
+                
+                <ul class="features">
+                    <li>
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="feature-text">
+                            <h4>Secure & Private</h4>
+                            <p>Your files are processed locally on our server and automatically deleted after 24 hours. We never store your personal data.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-bolt"></i>
+                        <div class="feature-text">
+                            <h4>Fast Processing</h4>
+                            <p>Extract audio from videos quickly with our optimized processing engine. Even large files are handled efficiently.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-mobile-alt"></i>
+                        <div class="feature-text">
+                            <h4>Mobile Friendly</h4>
+                            <p>Works perfectly on all devices - smartphones, tablets, and desktop computers. No app installation needed.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-infinity"></i>
+                        <div class="feature-text">
+                            <h4>No Limits</h4>
+                            <p>Unlimited extractions with no watermarks, no registration required, and completely free to use.</p>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="supported-formats">
+                    <h3>Supported Formats</h3>
+                    <div class="formats-grid">
+                        <div class="format-card">
+                            <i class="fas fa-film"></i>
+                            <div class="format-extension">MP4</div>
+                            <div class="format-name">Most Common</div>
+                        </div>
+                        <div class="format-card">
+                            <i class="fas fa-film"></i>
+                            <div class="format-extension">AVI</div>
+                            <div class="format-name">Audio Video</div>
+                        </div>
+                        <div class="format-card">
+                            <i class="fas fa-film"></i>
+                            <div class="format-extension">MOV</div>
+                            <div class="format-name">Apple QuickTime</div>
+                        </div>
+                        <div class="format-card">
+                            <i class="fas fa-film"></i>
+                            <div class="format-extension">MKV</div>
+                            <div class="format-name">Matroska Video</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="supported-formats">
+                    <h3>Output Audio Formats</h3>
+                    <div class="formats-grid">
+                        <div class="format-card">
+                            <i class="fas fa-music"></i>
+                            <div class="format-extension">MP3</div>
+                            <div class="format-name">Standard</div>
+                        </div>
+                        <div class="format-card">
+                            <i class="fas fa-music"></i>
+                            <div class="format-extension">WAV</div>
+                            <div class="format-name">High Quality</div>
+                        </div>
+                        <div class="format-card">
+                            <i class="fas fa-music"></i>
+                            <div class="format-extension">OGG</div>
+                            <div class="format-name">Open Source</div>
+                        </div>
+                        <div class="format-card">
+                            <i class="fas fa-music"></i>
+                            <div class="format-extension">M4A</div>
+                            <div class="format-name">Apple Audio</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: #f0ebff; border-radius: 10px;">
+                    <h3 style="color: #4a00e0; margin-bottom: 10px;"><i class="fas fa-lightbulb"></i> How It Works</h3>
+                    <ol style="padding-left: 20px; color: #555;">
+                        <li style="margin-bottom: 8px;">Select a video file from your device</li>
+                        <li style="margin-bottom: 8px;">Choose your preferred audio format</li>
+                        <li style="margin-bottom: 8px;">Set start/end time if you want to trim</li>
+                        <li style="margin-bottom: 8px;">Click "Extract Audio" to process</li>
+                        <li>Download your audio file</li>
+                    </ol>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <p>Video Audio Extractor © 2023 | Made with <i class="fas fa-heart" style="color:#ff4757;"></i> for content creators</p>
+        <p><a href="#"><i class="fas fa-code"></i> View Source Code</a> | <a href="#"><i class="fas fa-question-circle"></i> Help & FAQ</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const selectedFile = document.getElementById('selectedFile');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const removeFile = document.getElementById('removeFile');
+            const processBtn = document.getElementById('processBtn');
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('resultSection');
+            const errorSection = document.getElementById('errorSection');
+            const errorText = document.getElementById('errorText');
+            const downloadLink = document.getElementById('downloadLink');
+            const anotherBtn = document.getElementById('anotherBtn');
+            
+            // Variables
+            let currentFile = null;
+            
+            // Event Listeners
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#4a00e0';
+                uploadArea.style.background = '#f0ebff';
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = '#8e2de2';
+                uploadArea.style.background = '#f9f6ff';
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#8e2de2';
+                uploadArea.style.background = '#f9f6ff';
+                
+                if (e.dataTransfer.files.length) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            removeFile.addEventListener('click', resetFileSelection);
+            
+            processBtn.addEventListener('click', processFile);
+            
+            anotherBtn.addEventListener('click', resetAll);
+            
+            // Functions
+            function handleFileSelect(file) {
+                // Check file type
+                const validTypes = ['mp4', 'avi', 'mov', 'mkv', 'flv', 'wmv', 'webm', 'mpeg', 'mpg', 'm4v'];
+                const fileExt = file.name.split('.').pop().toLowerCase();
+                
+                if (!validTypes.includes(fileExt)) {
+                    showError('Please select a valid video file (MP4, AVI, MOV, MKV, etc.)');
+                    return;
+                }
+                
+                // Check file size (500MB limit)
+                if (file.size > 500 * 1024 * 1024) {
+                    showError('File size exceeds 500MB limit. Please select a smaller file.');
+                    return;
+                }
+                
+                currentFile = file;
+                
+                // Update UI
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                selectedFile.style.display = 'flex';
+                processBtn.disabled = false;
+                
+                // Hide any previous errors or results
+                errorSection.style.display = 'none';
+                resultSection.style.display = 'none';
+            }
+            
+            function resetFileSelection() {
+                currentFile = null;
+                fileInput.value = '';
+                selectedFile.style.display = 'none';
+                processBtn.disabled = true;
+            }
+            
+            function resetAll() {
+                resetFileSelection();
+                document.getElementById('startTime').value = '';
+                document.getElementById('endTime').value = '';
+                document.getElementById('format').value = 'mp3';
+                resultSection.style.display = 'none';
+                errorSection.style.display = 'none';
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            function showError(message) {
+                errorText.textContent = message;
+                errorSection.style.display = 'block';
+                loading.style.display = 'none';
+            }
+            
+            function hideError() {
+                errorSection.style.display = 'none';
+            }
+            
+            async function processFile() {
+                if (!currentFile) return;
+                
+                // Validate time inputs
+                const startTime = document.getElementById('startTime').value.trim();
+                const endTime = document.getElementById('endTime').value.trim();
+                const format = document.getElementById('format').value;
+                
+                if (startTime && !isValidTime(startTime)) {
+                    showError('Invalid start time format. Use MM:SS or seconds.');
+                    return;
+                }
+                
+                if (endTime && !isValidTime(endTime)) {
+                    showError('Invalid end time format. Use MM:SS or seconds.');
+                    return;
+                }
+                
+                // Show loading, hide other sections
+                loading.style.display = 'block';
+                errorSection.style.display = 'none';
+                resultSection.style.display = 'none';
+                
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('video', currentFile);
+                formData.append('format', format);
+                if (startTime) formData.append('start_time', startTime);
+                if (endTime) formData.append('end_time', endTime);
+                
+                try {
+                    // Send request to server
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Hide loading
+                    loading.style.display = 'none';
+                    
+                    if (data.success) {
+                        // Show success and set download link
+                        downloadLink.href = data.download_url;
+                        resultSection.style.display = 'block';
+                        
+                        // Auto-download after 2 seconds
+                        setTimeout(() => {
+                            downloadLink.click();
+                        }, 2000);
+                    } else {
+                        showError(data.error || 'An error occurred during extraction');
+                    }
+                } catch (error) {
+                    loading.style.display = 'none';
+                    showError('Network error. Please check your connection and try again.');
+                    console.error('Error:', error);
+                }
+            }
+            
+            function isValidTime(timeStr) {
+                // Check if it's in MM:SS format
+                const mmssFormat = /^([0-5]?[0-9]):([0-5][0-9])$/;
+                if (mmssFormat.test(timeStr)) return true;
+                
+                // Check if it's a valid number (seconds)
+                const seconds = parseFloat(timeStr);
+                return !isNaN(seconds) && seconds >= 0;
+            }
+            
+            // Initialize
+            resetAll();
+        });
+    </script>
+</body>
+</html>
